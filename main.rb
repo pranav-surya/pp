@@ -8,6 +8,21 @@ def gcd(a, b)
 	a
 end
 
+def rotate(array, x)
+	def reverse(arr, l, r)
+		while (l < r)
+			t = arr[l]
+			arr[l] = arr[r]
+			arr[r] = t
+			l += 1
+			r -= 1
+		end
+	end
+	reverse(array, 0, x-1)
+	reverse(array, x, array.size-1)
+	reverse(array, 0, array.size-1)
+end
+
 # File.open("/Users/prsurya/Desktop/pp/10_million_numbers.txt", "w") do |f|
 #     "1234567890".split('').repeated_permutation(7).each do |digits|
 #     	number = digits.join
@@ -16,7 +31,7 @@ end
 # end
 
 def compress_numbers
-	total_bits = 10_000_000
+	total_bits = 1000
 	integer_size = 64
 	buffer_size = (total_bits / integer_size) + 1
 	mask = integer_size - 1
@@ -40,4 +55,15 @@ def compress_numbers
 	end
 end
 
-compress_numbers
+def compress_numbers2
+	numbers = []
+	input = File.foreach("/Users/prsurya/Desktop/pp/10_million_numbers.txt", mode: "r", chomp: true) do |line|
+		numbers << line.to_i
+	end
+	numbers.sort!
+	File.open("/Users/prsurya/Desktop/pp/10_million_numbers_compressed.txt", mode: "w") do |file|
+		numbers.each do |i|
+			file.puts(i)
+		end
+	end
+end

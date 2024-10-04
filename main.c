@@ -15,6 +15,29 @@ int gcd(int a, int b)
 	return a;
 }
 
+void reverse(char* array, int array_size, int l, int r)
+{
+	if (l < 0)
+		l = 0;
+
+	if (r >= array_size)
+		r = array_size-1;
+
+	for (;l < r; l++, r--) {
+		char t = array[l];
+		array[l] = array[r];
+		array[r] = t;
+	}
+}
+
+void rotate_left(char* array, int array_size, int rotate_by)
+{
+	rotate_by = rotate_by % array_size;
+	reverse(array, array_size, 0, rotate_by-1);
+	reverse(array, array_size, rotate_by, array_size-1);
+	reverse(array, array_size, 0, array_size-1);
+}
+
 void compress_numbers(void)
 {
 	int total_bits = 10000000;
@@ -38,7 +61,7 @@ void compress_numbers(void)
     	number = atoll(input_line);
 		integer_bit_pos = number & mask;
 		buffer_index = number / integer_size;
-		buffer[buffer_index] = buffer[buffer_index] | (1LL << integer_bit_pos);
+		buffer[buffer_index] = buffer[buffer_index] | (1LLU << integer_bit_pos);
     }
 	fclose(fp);
 
@@ -50,7 +73,7 @@ void compress_numbers(void)
     for (number = 0; number < total_bits; number++) {
     	integer_bit_pos = number & mask;
     	buffer_index = number / integer_size;
-    	if (buffer[buffer_index] & (1LL << integer_bit_pos)) {
+    	if (buffer[buffer_index] & (1LLU << integer_bit_pos)) {
     		fprintf(fp, "%llu\n", number);
     	}
     }
@@ -59,8 +82,32 @@ void compress_numbers(void)
 	free(buffer);
 }
 
+int binary_search(int* array, int array_size, int number)
+{
+	int l = 0;
+	int r = array_size-1;
+	int m;
+	while (l <= r) {
+		m = l + (r-l)/2;
+		printf("l = %d | m = %d | r = %d\n", l, m, r);
+		if (array[m] == number) {
+			return 1;
+		} else if (number < array[m]) {
+			r = m-1;
+		} else {
+			l = m+1;
+		}
+	}
+	return 0;
+}
+
 int main(void)
 {
-	compress_numbers();
+	int array[] = {1, 2, 3, 4, 5, 6, 7};
+	int array_size = sizeof(array) / sizeof(array[0]);
+	for (int i = 0; i < array_size; ++i)
+	{
+		printf("search result = %d\n", binary_search(array, array_size, i+19));
+	}
 	return 0;
 }
